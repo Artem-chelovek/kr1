@@ -103,5 +103,43 @@ print(pancake_sorted_arr)
 """
 
 """
+Сортировка бусинами
+"""
+def bead_sort(arr):
+    """Осуществляет сортировку бусинами"""
+    # Получаем максимальную высоту столбца
+    max_height = max(arr)
+    
+    # Формируем матрицу бусинок: True означает наличие бусинки
+    beads_matrix = [[False]*len(arr) for _ in range(max_height)]
+    
+    # Заполнение матрицы бусинками
+    for col, height in enumerate(arr):
+        # Устанавливаем бусинки в соответствующие ячейки
+        for row in range(height):
+            beads_matrix[row][col] = True
+    
+    # "Позволяем бусинкам упасть": собираем их по рядам снизу-вверх
+    for row in range(max_height):
+        count = sum(beads_matrix[row])  # подсчет количества бусинок в ряду
+        # расставляем бусинки слева-направо
+        beads_matrix[row] = [True]*count + [False]*(len(arr)-count)
+    
+    # Восстанавливаем отсортированный массив из матрицы
+    sorted_arr = []
+    for col in range(len(arr)):
+        # подсчёт высоты нового столбца
+        height = sum([beads_matrix[row][col] for row in range(max_height)])
+        sorted_arr.append(height)
+    
+    return sorted_arr
 
+# Пример использования
+arr = [5, 3, 1, 7, 4]
+sorted_arr = bead_sort(arr)
+print(sorted_arr)
+
+"""
+Вывод:
+[7, 5, 4, 3, 1]
 """
