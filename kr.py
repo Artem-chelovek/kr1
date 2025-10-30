@@ -143,3 +143,100 @@ print(sorted_arr)
 Вывод:
 [7, 5, 4, 3, 1]
 """
+
+"""
+Поиск скачками
+"""
+import math
+
+def jump_search(arr, target):
+    """Осуществляет поиск скачком в отсортированном массиве"""
+    n = len(arr)
+    
+    # Определяем оптимальный шаг (квадратный корень из длины массива)
+    step = int(math.sqrt(n))
+    
+    # Начальная точка поиска
+    prev = 0
+    
+    # Находим блок, содержащий целевой элемент
+    while arr[min(step, n) - 1] < target:
+        prev = step
+        step += int(math.sqrt(n))
+        if prev >= n:
+            return None  # Целевой элемент отсутствует
+    
+    # Линейный поиск в найденном блоке
+    while arr[prev] < target:
+        prev += 1
+        if prev == min(step, n):
+            return None  # Целевой элемент отсутствует
+    
+    # Проверяем, совпадает ли текущий элемент с целью
+    if arr[prev] == target:
+        return prev  # Возврат индекса найденного элемента
+    
+    return None  # Целевой элемент отсутствует
+
+# Пример использования
+arr = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610]
+target = 55
+result = jump_search(arr, target)
+print(f'Элемент {target} найден на индексе: {result}')
+
+"""
+Вывод:
+
+Элемент 55 найден на индексе: 10
+"""
+
+
+"""
+Экспоненциальный поиск (Exponential Search)
+"""
+def binary_search(arr, low, high, x):
+    """Двоичный поиск внутри заданного диапазона"""
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == x:
+            return mid
+        elif arr[mid] < x:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1  # Элемент не найден
+
+def exponential_search(arr, x):
+    """Осуществляет экспоненциальный поиск в отсортированном массиве"""
+    n = len(arr)
+    
+    # Если массив пустой или цель меньше первого элемента
+    if n == 0 or x < arr[0]:
+        return -1
+    
+    # Ищем начальную точку для двоичного поиска
+    i = 1
+    while i < n and arr[i] <= x:
+        i *= 2  # Экспоненциально увеличиваем границу поиска
+    
+    # Границы для двоичного поиска
+    low = i // 2
+    high = min(i, n - 1)
+    
+    # Применяем двоичный поиск в ограниченной области
+    return binary_search(arr, low, high, x)
+
+# Пример использования
+arr = [2, 3, 4, 10, 40, 50, 60, 70, 80, 90, 100]
+target = 10
+result = exponential_search(arr, target)
+if result != -1:
+    print(f'Элемент {target} найден на индексе: {result}')
+else:
+    print('Элемент не найден')
+
+"""
+Вывод:
+
+Элемент 10 найден на индексе: 3
+"""
